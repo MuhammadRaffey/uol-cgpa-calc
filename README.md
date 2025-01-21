@@ -24,8 +24,8 @@ The **UOL CGPA Calculator** is a responsive and user-friendly React application 
 
 Ensure you have the following installed on your system:
 
-- Node.js (v14 or higher)
-- npm or yarn
+- Node.js (v20 or higher)
+- pnpm or npm or yarn
 
 ### Steps
 
@@ -56,9 +56,9 @@ Ensure you have the following installed on your system:
    ```bash
    pnpm dev
    # or
-   yarn dev
-   # or
    npm run dev
+   # or
+   yarn dev
    ```
 
 5. Open the application in your browser:
