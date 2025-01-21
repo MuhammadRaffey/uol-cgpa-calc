@@ -1,49 +1,82 @@
 import Link from "next/link";
-import { FaGithub, FaLinkedin, FaGlobe } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaGlobe, FaHeart } from "react-icons/fa";
+
 const Footer = () => {
   return (
-    <footer className="mt-12 bg-gray-800 border-t border-gray-700 py-8 rounded-lg">
+    <footer className="mt-12 bg-gray-900 border-t border-gray-800 py-8 rounded-lg shadow-lg">
       <div className="max-w-3xl mx-auto px-4">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <p className="text-lg text-center font-medium text-gray-300 px-4">
-            Made with ❤️ by <strong>Muhammad Raffey</strong> ✨
-          </p>
+        <div className="flex flex-col items-center justify-center space-y-6">
+          <div className="flex items-center justify-center space-x-2 text-lg font-medium text-gray-300">
+            <span>Made with</span>
+            <FaHeart className="text-red-500 animate-pulse" />
+            <span>by</span>
+            <strong className="text-emerald-400 font-semibold">
+              Muhammad Raffey
+            </strong>
+            <span className="text-emerald-400">✨</span>
+          </div>
 
           <div className="flex items-center justify-center gap-6">
             <Link
               href="https://linkedin.com/in/muhammad-raffey"
               target="_blank"
               rel="noopener noreferrer"
-              className="transform transition-all duration-200 hover:scale-110"
+              className="group relative"
+              aria-label="LinkedIn Profile"
             >
-              <div className="bg-gray-700 p-3 rounded-full hover:bg-gray-600">
-                <FaLinkedin size={24} className="text-blue-400" />
+              <div className="bg-gray-800 p-3 rounded-full transform transition-all duration-300 group-hover:bg-gray-700 group-hover:scale-110 group-hover:shadow-lg">
+                <FaLinkedin
+                  size={24}
+                  className="text-blue-400 group-hover:text-blue-300"
+                />
               </div>
+              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                LinkedIn
+              </span>
             </Link>
+
             <Link
               href="https://github.com/MuhammadRaffey"
               target="_blank"
               rel="noopener noreferrer"
-              className="transform transition-all duration-200 hover:scale-110"
+              className="group relative"
+              aria-label="GitHub Profile"
             >
-              <div className="bg-gray-700 p-3 rounded-full hover:bg-gray-600">
-                <FaGithub size={24} className="text-gray-300" />
+              <div className="bg-gray-800 p-3 rounded-full transform transition-all duration-300 group-hover:bg-gray-700 group-hover:scale-110 group-hover:shadow-lg">
+                <FaGithub
+                  size={24}
+                  className="text-gray-300 group-hover:text-white"
+                />
               </div>
+              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                GitHub
+              </span>
             </Link>
+
             <Link
               href="https://raffey-portfolio.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transform transition-all duration-200 hover:scale-110"
+              className="group relative"
+              aria-label="Portfolio Website"
             >
-              <div className="bg-gray-700 p-3 rounded-full hover:bg-gray-600">
-                <FaGlobe size={24} className="text-emerald-400" />
+              <div className="bg-gray-800 p-3 rounded-full transform transition-all duration-300 group-hover:bg-gray-700 group-hover:scale-110 group-hover:shadow-lg">
+                <FaGlobe
+                  size={24}
+                  className="text-emerald-400 group-hover:text-emerald-300"
+                />
               </div>
+              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Portfolio
+              </span>
             </Link>
           </div>
-          <p className="text-sm text-gray-500 mt-4">
-            © {new Date().getFullYear()} | UOL CGPA Calculator
-          </p>
+
+          <div className="pt-6 border-t border-gray-800 w-full text-center">
+            <p className="text-sm text-gray-500">
+              © {new Date().getFullYear()} | UOL CGPA Calculator
+            </p>
+          </div>
         </div>
       </div>
     </footer>
