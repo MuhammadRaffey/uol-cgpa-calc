@@ -6,14 +6,14 @@ const Footer = () => {
     <footer className="mt-12 bg-gray-900 border-t border-gray-800 py-8 rounded-lg shadow-lg">
       <div className="max-w-3xl mx-auto px-4">
         <div className="flex flex-col items-center justify-center space-y-6">
-          <div className="flex items-center justify-center space-x-2 text-lg font-medium text-gray-300">
-            <span>Made with</span>
+          <div className="flex items-center justify-center gap-2 text-lg font-medium">
+            <span className="text-white">Made</span>
+            <span className="text-white">with</span>
             <FaHeart className="text-red-500 animate-pulse" />
-            <span>by</span>
-            <strong className="text-emerald-400 font-semibold">
-              Muhammad Raffey
-            </strong>
-            <span className="text-emerald-400">✨</span>
+            <span className="text-white">by</span>
+            <strong className="text-emerald-400 font-semibold">Muhammad</strong>
+            <strong className="text-emerald-400 font-semibold">Raffey</strong>
+            <span className="text-yellow-400">✨</span>
           </div>
 
           <div className="flex items-center justify-center gap-6">
