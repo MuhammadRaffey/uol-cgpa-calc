@@ -18,7 +18,7 @@ const Footer = () => {
 
           <div className="flex items-center justify-center gap-6">
             <Link
-              href="https://linkedin.com/in/muhammad-raffey"
+              href="https://linkedin.com/in/muhammadraffey"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative"
