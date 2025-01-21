@@ -4,8 +4,6 @@
 
 The **UOL CGPA Calculator** is a responsive and user-friendly React application built with Next.js. It allows students to calculate their CGPA based on their course grades and credits.
 
-![Screenshot of the CGPA Calculator](path/to/screenshot.png)
-
 ## Features
 
 - Add multiple courses with course name, credits, and grades.
