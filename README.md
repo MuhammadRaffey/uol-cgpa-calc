@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UOL CGPA Calculator
 
-## Getting Started
+## Overview
 
-First, run the development server:
+The **UOL CGPA Calculator** is a responsive and user-friendly React application built with Next.js. It allows students to calculate their CGPA based on their course grades and credits.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![Screenshot of the CGPA Calculator](path/to/screenshot.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Add multiple courses with course name, credits, and grades.
+- Dynamically calculate CGPA based on input values.
+- Intuitive user interface with a modern design.
+- Footer section with creator details and social media links.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+- **React** with **TypeScript**
+- **Next.js**
+- **Tailwind CSS** for styling
+- **React Icons** for social media links
 
-To learn more about Next.js, take a look at the following resources:
+## Installation and Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ensure you have the following installed on your system:
 
-## Deploy on Vercel
+- Node.js (v14 or higher)
+- npm or yarn
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Steps
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/MuhammadRaffey/uol-cgpa-calc
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd uol-cgpa-calc
+   ```
+
+3. Install the dependencies:
+
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
+
+4. Run the development server:
+
+   ```bash
+   pnpm dev
+   # or
+   yarn dev
+   # or
+   npm run dev
+   ```
+
+5. Open the application in your browser:
+   ```
+   http://localhost:3000
+   ```
+
+## Usage
+
+1. Enter the course name, credits, and grade for each course.
+2. Add more courses by clicking the **Add Course** button.
+3. Remove any unwanted courses using the **Remove** button.
+4. Click **Calculate CGPA** to view the result.
+
+## Social Links
+
+The footer contains links to connect with the creator:
+
+- [LinkedIn](https://linkedin.com/in/muhammad-raffey)
+- [GitHub](https://github.com/MuhammadRaffey)
+- [Portfolio](https://raffey-portfolio.vercel.app/)
+
+## Screenshot
+
+![Example](./public/Example.png)
+
+### Creator
+
+Developed with ❤️ by [Muhammad Raffey](https://raffey-portfolio.vercel.app/).

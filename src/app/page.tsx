@@ -113,7 +113,9 @@ const CgpaCalculator: React.FC = () => {
         <h1 className="text-4xl font-bold text-center text-gray-100 mb-8">
           UOL CGPA Calculator
         </h1>
-
+        <p className="text-lg text-center text-gray-300 mb-8">
+          University of Lahore CGPA calculator
+        </p>
         <div className="bg-gray-800 shadow-xl rounded-lg p-6 space-y-6 border border-gray-700">
           {courses.map((course, index) => (
             <div
@@ -160,7 +162,7 @@ const CgpaCalculator: React.FC = () => {
             </div>
           ))}
 
-          <div className="flex gap-4 pt-4">
+          <div className="flex gap-10 pt-4 justify-center">
             <button
               onClick={addCourse}
               className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
