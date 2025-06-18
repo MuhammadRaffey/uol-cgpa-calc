@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique @map("clerk_id")
+  email     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  calculations CGPACalculation[]
+
+  @@map("users")
+}
+
+model CGPACalculation {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  calculationName   String   @map("calculation_name")
+  totalCredits      Decimal  @map("total_credits") @db.Decimal(5, 2)
+  totalGradePoints  Decimal  @map("total_grade_points") @db.Decimal(8, 2)
+  cgpa              Decimal  @db.Decimal(4, 2)
+  courses           Json     // Store course details as JSON
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cgpa_calculations")
+}
