@@ -4,7 +4,7 @@ This guide will help you set up Neon database for your CGPA calculator applicati
 
 ## 🚀 **Step 1: Create Neon Account**
 
-1. Go to [neon.tech](https://neon.tech)
+1. Go to [neon.com](https://neon.com)
 2. Sign up for a free account
 3. Create a new project
 
@@ -33,13 +33,13 @@ Run these commands to set up your database:
 
 ```bash
 # Generate Prisma client
-npx prisma generate
+pnpx prisma generate
 
 # Push the schema to your database
-npx prisma db push
+pnpx prisma db push
 
 # (Optional) View your database in Prisma Studio
-npx prisma studio
+pnpx prisma studio
 ```
 
 ## ✅ **Step 5: Verify Setup**
@@ -92,8 +92,8 @@ Your database will have two tables:
 
 ### **Migration Issues**
 
-- Run `npx prisma generate` first
-- Then run `npx prisma db push`
+- Run `pnpx prisma generate` first
+- Then run `pnpx prisma db push`
 - Check the console for error messages
 
 ### **Authentication Issues**
@@ -107,19 +107,19 @@ Your database will have two tables:
 ### **View Data**
 
 ```bash
-npx prisma studio
+pnpx prisma studio
 ```
 
 ### **Reset Database**
 
 ```bash
-npx prisma db push --force-reset
+pnpx prisma db push --force-reset
 ```
 
 ### **Generate Types**
 
 ```bash
-npx prisma generate
+pnpx prisma generate
 ```
 
 ## 🚀 **Production Deployment**
@@ -127,7 +127,7 @@ npx prisma generate
 When deploying to production:
 
 1. **Update Environment Variables**: Use production Clerk and Neon keys
-2. **Database Migration**: Run `npx prisma db push` on your production database
+2. **Database Migration**: Run `pnpx prisma db push` on your production database
 3. **Build**: Run `pnpm build` to generate production build
 4. **Deploy**: Deploy to your hosting platform (Vercel, Netlify, etc.)
 

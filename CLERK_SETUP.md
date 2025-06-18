@@ -8,8 +8,8 @@ Create a `.env.local` file in the root directory with the following variables:
 
 ```bash
 # .env.local
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_c3BsZW5kaWQtZWxmLTUuY2xlcmsuYWNjb3VudHMuZGV2JA
-CLERK_SECRET_KEY=sk_test_AEEgL2fH1hyQwIMp9xfK8M5X1kyguNezefg4KzG1Mn
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-api-key
+CLERK_SECRET_KEY=your-api-key
 ```
 
 ## What's Been Added
