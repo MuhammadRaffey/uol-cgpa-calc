@@ -50,14 +50,7 @@ const CgpaCalculator: React.FC = () => {
   }, [mounted, isLoaded, isSignedIn, router]);
 
   // Load auto-saved calculation on mount
-  useEffect(() => {
-    if (mounted && isLoaded && isSignedIn && !hasLoadedAutoSaveRef.current) {
-      loadAutoSavedCalculation();
-      hasLoadedAutoSaveRef.current = true;
-    }
-  }, [mounted, isLoaded, isSignedIn]);
-
-  const loadAutoSavedCalculation = async () => {
+  const loadAutoSavedCalculation = useCallback(async () => {
     try {
       const response = await fetch("/api/calculations");
       if (!response.ok) {
@@ -66,7 +59,8 @@ const CgpaCalculator: React.FC = () => {
 
       const calculations = await response.json();
       const autoSavedCalculation = calculations.find(
-        (calc: any) => calc.calculationName === "Auto-saved"
+        (calc: { calculationName: string }) =>
+          calc.calculationName === "Auto-saved"
       );
 
       if (autoSavedCalculation) {
@@ -100,7 +94,14 @@ const CgpaCalculator: React.FC = () => {
     } catch (error) {
       console.error("Error loading auto-saved calculation:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isLoaded && isSignedIn && !hasLoadedAutoSaveRef.current) {
+      loadAutoSavedCalculation();
+      hasLoadedAutoSaveRef.current = true;
+    }
+  }, [mounted, isLoaded, isSignedIn, loadAutoSavedCalculation]);
 
   const showAutoSaveStatus = (
     message: string,
@@ -193,7 +194,7 @@ const CgpaCalculator: React.FC = () => {
 
   // Handle page unload
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       // Save immediately when user is leaving
       autoSaveCalculation();
     };
