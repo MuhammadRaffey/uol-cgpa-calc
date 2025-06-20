@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Footer from "@/components/Footer";
 import CgpaCalculatorComponent from "@/components/Main";
 import SaveCalculationModal from "@/components/SaveCalculationModal";
@@ -28,6 +28,17 @@ const CgpaCalculator: React.FC = () => {
     courses: Course[];
   } | null>(null);
 
+  // Auto-save refs and state
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastAutoSavedRef = useRef<string>("");
+  const isAutoSavingRef = useRef(false);
+  const hasLoadedAutoSaveRef = useRef(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+    visible: boolean;
+  }>({ message: "", type: "info", visible: false });
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -37,6 +48,191 @@ const CgpaCalculator: React.FC = () => {
       router.push("/sign-in");
     }
   }, [mounted, isLoaded, isSignedIn, router]);
+
+  // Load auto-saved calculation on mount
+  useEffect(() => {
+    if (mounted && isLoaded && isSignedIn && !hasLoadedAutoSaveRef.current) {
+      loadAutoSavedCalculation();
+      hasLoadedAutoSaveRef.current = true;
+    }
+  }, [mounted, isLoaded, isSignedIn]);
+
+  const loadAutoSavedCalculation = async () => {
+    try {
+      const response = await fetch("/api/calculations");
+      if (!response.ok) {
+        throw new Error("Failed to fetch calculations");
+      }
+
+      const calculations = await response.json();
+      const autoSavedCalculation = calculations.find(
+        (calc: any) => calc.calculationName === "Auto-saved"
+      );
+
+      if (autoSavedCalculation) {
+        // Load the auto-saved calculation
+        setLoadSavedCalculation({
+          cgpa: autoSavedCalculation.cgpa,
+          totalCredits: autoSavedCalculation.totalCredits,
+          totalGradePoints: autoSavedCalculation.totalGradePoints,
+          courses: autoSavedCalculation.courses,
+        });
+
+        // Update current calculation to match auto-saved
+        setCurrentCalculation({
+          cgpa: autoSavedCalculation.cgpa,
+          totalCredits: autoSavedCalculation.totalCredits,
+          totalGradePoints: autoSavedCalculation.totalGradePoints,
+          courses: autoSavedCalculation.courses,
+        });
+
+        // Update the last auto-saved reference to prevent immediate re-save
+        lastAutoSavedRef.current = JSON.stringify({
+          cgpa: autoSavedCalculation.cgpa,
+          totalCredits: autoSavedCalculation.totalCredits,
+          totalGradePoints: autoSavedCalculation.totalGradePoints,
+          courses: autoSavedCalculation.courses,
+        });
+
+        console.log("Auto-saved calculation loaded");
+        showAutoSaveStatus("Auto-saved calculation restored", "success");
+      }
+    } catch (error) {
+      console.error("Error loading auto-saved calculation:", error);
+    }
+  };
+
+  const showAutoSaveStatus = (
+    message: string,
+    type: "success" | "error" | "info"
+  ) => {
+    setAutoSaveStatus({ message, type, visible: true });
+    setTimeout(() => {
+      setAutoSaveStatus((prev) => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
+  // Auto-save function
+  const autoSaveCalculation = useCallback(async () => {
+    // Don't auto-save if already saving or if no meaningful data
+    if (
+      isAutoSavingRef.current ||
+      (currentCalculation.totalCredits === 0 &&
+        currentCalculation.courses.length === 0)
+    ) {
+      return;
+    }
+
+    // Create a hash of current calculation to avoid unnecessary saves
+    const currentState = JSON.stringify({
+      cgpa: currentCalculation.cgpa,
+      totalCredits: currentCalculation.totalCredits,
+      totalGradePoints: currentCalculation.totalGradePoints,
+      courses: currentCalculation.courses,
+    });
+
+    // Only save if state has changed since last auto-save
+    if (currentState === lastAutoSavedRef.current) {
+      return;
+    }
+
+    isAutoSavingRef.current = true;
+
+    try {
+      const response = await fetch("/api/calculations/auto-save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          totalCredits: currentCalculation.totalCredits,
+          totalGradePoints: currentCalculation.totalGradePoints,
+          cgpa: currentCalculation.cgpa,
+          courses: currentCalculation.courses,
+        }),
+      });
+
+      if (response.ok) {
+        lastAutoSavedRef.current = currentState;
+        console.log("Auto-save successful");
+        showAutoSaveStatus("Progress auto-saved", "success");
+      } else {
+        console.error("Auto-save failed:", response.statusText);
+        showAutoSaveStatus("Auto-save failed", "error");
+      }
+    } catch (error) {
+      console.error("Error during auto-save:", error);
+      showAutoSaveStatus("Auto-save failed", "error");
+    } finally {
+      isAutoSavingRef.current = false;
+    }
+  }, [currentCalculation]);
+
+  // Debounced auto-save
+  const debouncedAutoSave = useCallback(() => {
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+    autoSaveTimeoutRef.current = setTimeout(autoSaveCalculation, 2000); // 2 second delay
+  }, [autoSaveCalculation]);
+
+  // Handle page visibility change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, save immediately
+        autoSaveCalculation();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [autoSaveCalculation]);
+
+  // Handle page unload
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Save immediately when user is leaving
+      autoSaveCalculation();
+    };
+
+    const handleUnload = () => {
+      // Use sendBeacon for more reliable unload saving
+      if (navigator.sendBeacon) {
+        const data = JSON.stringify({
+          totalCredits: currentCalculation.totalCredits,
+          totalGradePoints: currentCalculation.totalGradePoints,
+          cgpa: currentCalculation.cgpa,
+          courses: currentCalculation.courses,
+        });
+
+        // Create a Blob with proper content type
+        const blob = new Blob([data], { type: "application/json" });
+        navigator.sendBeacon("/api/calculations/auto-save", blob);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleUnload);
+    };
+  }, [autoSaveCalculation, currentCalculation]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      // Final auto-save on component unmount
+      autoSaveCalculation();
+    };
+  }, [autoSaveCalculation]);
 
   const handleSaveCalculation = async (name: string) => {
     try {
@@ -96,6 +292,8 @@ const CgpaCalculator: React.FC = () => {
     courses: Course[];
   }) => {
     setCurrentCalculation(calculation);
+    // Trigger debounced auto-save when calculation updates
+    debouncedAutoSave();
   };
 
   // Don't render anything until mounted to prevent hydration mismatch
@@ -170,6 +368,48 @@ const CgpaCalculator: React.FC = () => {
               {showSavedCalculations ? "Hide Saved" : "View Saved"}
             </span>
           </button>
+        </div>
+
+        {/* Auto-save Status Indicator */}
+        {autoSaveStatus.visible && (
+          <div className="flex justify-center mb-6">
+            <div
+              className={`px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transition-all duration-300 ${
+                autoSaveStatus.type === "success"
+                  ? "bg-green-600/20 border border-green-500/30 text-green-300"
+                  : autoSaveStatus.type === "error"
+                  ? "bg-red-600/20 border border-red-500/30 text-red-300"
+                  : "bg-blue-600/20 border border-blue-500/30 text-blue-300"
+              }`}
+            >
+              <Save
+                className={`w-4 h-4 ${
+                  autoSaveStatus.type === "success"
+                    ? "text-green-400"
+                    : autoSaveStatus.type === "error"
+                    ? "text-red-400"
+                    : "text-blue-400"
+                }`}
+              />
+              <span className="text-sm font-medium">
+                {autoSaveStatus.message}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Auto-save Info */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600/10 border border-blue-500/20 rounded-full">
+            <Save className="w-4 h-4 text-blue-400" />
+            <span className="text-sm text-blue-300 font-medium">
+              Auto-save enabled
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mt-2">
+            Your progress is automatically saved every 2 seconds and when you
+            leave the page
+          </p>
         </div>
 
         {/* Calculator and Saved Panel */}

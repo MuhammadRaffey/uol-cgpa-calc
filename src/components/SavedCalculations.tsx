@@ -10,6 +10,8 @@ import {
   Clock,
   TrendingUp,
   Edit,
+  RotateCcw,
+  Save,
 } from "lucide-react";
 import EditCalculationModal from "./EditCalculationModal";
 
@@ -39,6 +41,7 @@ interface Calculation {
   cgpa: number;
   courses: Course[];
   createdAt: string;
+  updatedAt: string;
 }
 
 interface SavedCalculationsProps {
@@ -164,6 +167,27 @@ export default function SavedCalculations({
     });
   };
 
+  const isAutoSaved = (calculation: Calculation) => {
+    return calculation.calculationName === "Auto-saved";
+  };
+
+  const getAutoSaveTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}d ago`;
+  };
+
   if (loading) {
     return (
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
@@ -245,17 +269,39 @@ export default function SavedCalculations({
         {calculations.map((calculation) => (
           <div
             key={calculation.id}
-            className="p-6 hover:bg-gray-750 transition-colors"
+            className={`p-6 hover:bg-gray-750 transition-colors ${
+              isAutoSaved(calculation)
+                ? "bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-l-4 border-blue-500"
+                : ""
+            }`}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h4 className="text-lg font-medium text-gray-100 mb-1">
-                  {calculation.calculationName}
-                </h4>
+                <div className="flex items-center gap-2 mb-1">
+                  <h4
+                    className={`text-lg font-medium ${
+                      isAutoSaved(calculation)
+                        ? "text-blue-300"
+                        : "text-gray-100"
+                    }`}
+                  >
+                    {calculation.calculationName}
+                  </h4>
+                  {isAutoSaved(calculation) && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 rounded-full">
+                      <Save className="w-3 h-3 text-blue-400" />
+                      <span className="text-xs text-blue-400 font-medium">
+                        Auto-saved
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="flex items-center gap-4 text-sm text-gray-400">
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {formatDate(calculation.createdAt)}
+                    {isAutoSaved(calculation)
+                      ? getAutoSaveTimeAgo(calculation.updatedAt)
+                      : formatDate(calculation.createdAt)}
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -265,7 +311,13 @@ export default function SavedCalculations({
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-400">
+                  <div
+                    className={`text-2xl font-bold ${
+                      isAutoSaved(calculation)
+                        ? "text-blue-400"
+                        : "text-blue-400"
+                    }`}
+                  >
                     {Number(calculation.cgpa).toFixed(2)}
                   </div>
                   <div className="text-xs text-gray-400">CGPA</div>
@@ -295,59 +347,87 @@ export default function SavedCalculations({
             </div>
 
             <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  // Calculate previous data from the saved calculation
-                  const currentCredits = calculation.courses.reduce(
-                    (sum, course) => sum + course.credits,
-                    0
-                  );
-                  const currentPoints = calculation.courses.reduce(
-                    (sum, course) =>
-                      sum + gradePoints[course.grade] * course.credits,
-                    0
-                  );
-
-                  // If there's previous data (total credits > current credits)
-                  if (calculation.totalCredits > currentCredits) {
-                    const prevCredits =
-                      calculation.totalCredits - currentCredits;
-                    const prevPoints =
-                      calculation.totalGradePoints - currentPoints;
-                    const prevCgpa = prevPoints / prevCredits;
-
+              {isAutoSaved(calculation) ? (
+                // Auto-saved calculation - show restore button
+                <button
+                  onClick={() => {
+                    // Load the auto-saved calculation with all its courses
                     onLoadCalculation({
-                      cgpa: prevCgpa,
-                      totalCredits: prevCredits,
-                      totalGradePoints: prevPoints,
-                      courses: [], // Empty courses array - user will add new ones
+                      cgpa: calculation.cgpa,
+                      totalCredits: calculation.totalCredits,
+                      totalGradePoints: calculation.totalGradePoints,
+                      courses: calculation.courses,
                     });
-                  } else {
-                    // No previous data, just load with empty state
-                    onLoadCalculation({
-                      cgpa: 0,
-                      totalCredits: 0,
-                      totalGradePoints: 0,
-                      courses: [],
-                    });
-                  }
-                }}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center gap-2 font-medium"
-              >
-                <Download className="w-4 h-4" />
-                Load
-              </button>
-              <button
-                onClick={() => startEditing(calculation)}
-                className="px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200"
-                title="Edit calculation"
-              >
-                <Edit className="w-4 h-4" />
-              </button>
+                  }}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-2 font-medium"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Restore
+                </button>
+              ) : (
+                // Regular calculation - show load button
+                <button
+                  onClick={() => {
+                    // Calculate previous data from the saved calculation
+                    const currentCredits = calculation.courses.reduce(
+                      (sum, course) => sum + course.credits,
+                      0
+                    );
+                    const currentPoints = calculation.courses.reduce(
+                      (sum, course) =>
+                        sum + gradePoints[course.grade] * course.credits,
+                      0
+                    );
+
+                    // If there's previous data (total credits > current credits)
+                    if (calculation.totalCredits > currentCredits) {
+                      const prevCredits =
+                        calculation.totalCredits - currentCredits;
+                      const prevPoints =
+                        calculation.totalGradePoints - currentPoints;
+                      const prevCgpa = prevPoints / prevCredits;
+
+                      onLoadCalculation({
+                        cgpa: prevCgpa,
+                        totalCredits: prevCredits,
+                        totalGradePoints: prevPoints,
+                        courses: [], // Empty courses array - user will add new ones
+                      });
+                    } else {
+                      // No previous data, just load with empty state
+                      onLoadCalculation({
+                        cgpa: 0,
+                        totalCredits: 0,
+                        totalGradePoints: 0,
+                        courses: [],
+                      });
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center gap-2 font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  Load
+                </button>
+              )}
+
+              {!isAutoSaved(calculation) && (
+                <button
+                  onClick={() => startEditing(calculation)}
+                  className="px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200"
+                  title="Edit calculation"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+              )}
+
               <button
                 onClick={() => deleteCalculation(calculation.id)}
                 className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200"
-                title="Delete calculation"
+                title={
+                  isAutoSaved(calculation)
+                    ? "Delete auto-saved calculation"
+                    : "Delete calculation"
+                }
               >
                 <Trash2 className="w-4 h-4" />
               </button>
