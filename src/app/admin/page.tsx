@@ -5,7 +5,7 @@ import AdminUserList, {
   type AdminUserListItem,
 } from "@/components/admin/user-list";
 
-const toDateString = (value: Date | string | null) => {
+const toDateString = (value: Date | string | number | null) => {
   if (!value) return "—";
   const date = value instanceof Date ? value : new Date(value);
   return date.toLocaleDateString("en-US", {
@@ -102,29 +102,36 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const legacyUsers = dbUsers.filter((user) => !clerkUserIds.has(user.clerkId));
 
+  const toClerkListItem = (
+    user: UserListResponse["data"][number]
+  ): AdminUserListItem => {
+    const displayName =
+      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+      user.emailAddresses[0]?.emailAddress ||
+      "Unnamed user";
+
+    return {
+      id: user.id,
+      name: displayName,
+      email: user.emailAddresses[0]?.emailAddress ?? "—",
+      calculationCount: calculationCounts.get(user.id) ?? 0,
+      createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
+      source: "clerk",
+    };
+  };
+
+  const toLegacyListItem = (user: (typeof dbUsers)[number]): AdminUserListItem => ({
+    id: user.clerkId,
+    name: user.email ?? "Legacy user",
+    email: user.email ?? "No email",
+    calculationCount: user._count.calculations,
+    createdAt: user.createdAt.toISOString(),
+    source: "legacy",
+  });
+
   const mergedUsers: AdminUserListItem[] = [
-    ...allUsers.map((user) => {
-      const displayName =
-        [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-        user.emailAddresses[0]?.emailAddress ||
-        "Unnamed user";
-      return {
-        id: user.id,
-        name: displayName,
-        email: user.emailAddresses[0]?.emailAddress ?? "—",
-        calculationCount: calculationCounts.get(user.id) ?? 0,
-        createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
-        source: "clerk",
-      };
-    }),
-    ...legacyUsers.map((user) => ({
-      id: user.clerkId,
-      name: user.email ?? "Legacy user",
-      email: user.email ?? "No email",
-      calculationCount: user._count.calculations,
-      createdAt: user.createdAt.toISOString(),
-      source: "legacy",
-    })),
+    ...allUsers.map(toClerkListItem),
+    ...legacyUsers.map(toLegacyListItem),
   ].sort((a, b) => {
     const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
     const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -158,8 +165,22 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     ? await client.users.getUser(selectedUserId).catch(() => null)
     : null;
 
-  const selectedCalculations =
-    (selectedDbUser?.calculations as CalculationRecord[]) ?? [];
+  const toCalculationRecord = (
+    calculation: NonNullable<typeof selectedDbUser>["calculations"][number]
+  ): CalculationRecord => ({
+    id: calculation.id,
+    calculationName: calculation.calculationName,
+    totalCredits: Number(calculation.totalCredits),
+    totalGradePoints: Number(calculation.totalGradePoints),
+    cgpa: Number(calculation.cgpa),
+    courses: calculation.courses,
+    createdAt: calculation.createdAt,
+    updatedAt: calculation.updatedAt,
+  });
+
+  const selectedCalculations = (selectedDbUser?.calculations ?? []).map(
+    toCalculationRecord
+  );
 
   const selectedDisplayName =
     selectedClerkUser &&
