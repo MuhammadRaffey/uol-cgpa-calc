@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import AuthHeader from "@/components/AuthHeader";
+import ThemeProvider from "@/components/theme-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fraunces",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const manrope = Manrope({
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
@@ -27,14 +30,25 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html
+        lang="en"
+        className={`${fraunces.variable} ${manrope.variable}`}
+        suppressHydrationWarning={true}
+      >
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900`}
+          className="min-h-screen bg-[#f7f3ec] text-slate-900 antialiased font-sans dark:bg-slate-950 dark:text-slate-100"
           suppressHydrationWarning={true}
         >
-          <AuthHeader />
-          <main>{children}</main>
-          <SpeedInsights />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={true}
+            disableTransitionOnChange={true}
+          >
+            <AuthHeader />
+            <main>{children}</main>
+            <SpeedInsights />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

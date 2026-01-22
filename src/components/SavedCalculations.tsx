@@ -190,20 +190,23 @@ export default function SavedCalculations({
 
   if (loading) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-blue-600 rounded-lg">
-            <BookOpen className="w-5 h-5 text-white" />
+          <div className="rounded-2xl bg-emerald-100 p-2 dark:bg-emerald-400/10">
+            <BookOpen className="w-5 h-5 text-emerald-700 dark:text-emerald-200" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-100">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             Saved Calculations
           </h3>
         </div>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-gray-700 rounded-lg p-4 animate-pulse">
-              <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-600 rounded w-1/2"></div>
+            <div
+              key={i}
+              className="rounded-2xl bg-slate-100/80 p-4 animate-pulse dark:bg-white/5"
+            >
+              <div className="h-4 bg-slate-200 rounded w-3/4 mb-2 dark:bg-white/10"></div>
+              <div className="h-3 bg-slate-200 rounded w-1/2 dark:bg-white/10"></div>
             </div>
           ))}
         </div>
@@ -213,12 +216,13 @@ export default function SavedCalculations({
 
   if (error) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <div className="text-center text-gray-400">
+      <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
+        <div className="text-center text-slate-500 dark:text-slate-400">
           <p>{error}</p>
           <button
             onClick={fetchCalculations}
-            className="mt-2 text-blue-400 hover:text-blue-300"
+            className="mt-2 text-slate-900 hover:text-slate-700 dark:text-slate-100 dark:hover:text-slate-200"
+            aria-label="Retry loading saved calculations"
           >
             Try again
           </button>
@@ -229,11 +233,13 @@ export default function SavedCalculations({
 
   if (calculations.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <div className="text-center text-gray-400">
-          <BookOpen className="w-12 h-12 mx-auto mb-3 text-gray-600" />
-          <p className="text-lg font-medium mb-2">No saved calculations</p>
-          <p className="text-sm">
+      <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
+        <div className="text-center text-slate-500 dark:text-slate-400">
+          <BookOpen className="w-12 h-12 mx-auto mb-3 text-slate-400 dark:text-slate-500" />
+          <p className="text-lg font-medium mb-2 text-slate-900 dark:text-slate-100">
+            No saved calculations
+          </p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Save your first CGPA calculation to see it here
           </p>
         </div>
@@ -242,64 +248,74 @@ export default function SavedCalculations({
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700">
+    <div className="rounded-[32px] border border-slate-200/80 bg-white/80 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
       {/* Header */}
-      <div className="p-6 border-b border-gray-700">
+      <div className="p-6 border-b border-slate-200/80 dark:border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-lg">
-              <BookOpen className="w-5 h-5 text-white" />
+            <div className="rounded-2xl bg-emerald-100 p-2 dark:bg-emerald-400/10">
+              <BookOpen className="w-5 h-5 text-emerald-700 dark:text-emerald-200" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-100">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Saved Calculations
               </h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {calculations.length} calculation
                 {calculations.length !== 1 ? "s" : ""} saved
               </p>
             </div>
           </div>
-          <TrendingUp className="w-5 h-5 text-gray-400" />
+          <TrendingUp className="w-5 h-5 text-slate-400 dark:text-slate-500" />
         </div>
       </div>
 
       {/* Calculations List */}
-      <div className="divide-y divide-gray-700">
-        {calculations.map((calculation) => (
-          <div
-            key={calculation.id}
-            className={`p-6 hover:bg-gray-750 transition-colors ${
-              isAutoSaved(calculation)
-                ? "bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-l-4 border-blue-500"
-                : ""
-            }`}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h4
-                    className={`text-lg font-medium ${
-                      isAutoSaved(calculation)
-                        ? "text-blue-300"
-                        : "text-gray-100"
-                    }`}
+      <div className="divide-y divide-slate-200/80 dark:divide-white/10">
+        {calculations.map((calculation) => {
+          const isAuto = isAutoSaved(calculation);
+          const containerClass = isAuto
+            ? "bg-emerald-50/70 border-l-4 border-emerald-400 dark:bg-emerald-500/10"
+            : "bg-white/80 dark:bg-slate-900/70";
+          const titleClass = isAuto
+            ? "text-emerald-700 dark:text-emerald-200"
+            : "text-slate-900 dark:text-slate-100";
+          const valueClass = isAuto
+            ? "text-emerald-700 dark:text-emerald-200"
+            : "text-slate-900 dark:text-slate-100";
+          const badgeClass = isAuto
+            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-200"
+            : "";
+          const primaryButtonClass = isAuto
+            ? "bg-emerald-600 text-white hover:bg-emerald-500"
+            : "bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100";
+
+          return (
+            <div
+              key={calculation.id}
+              className={`p-6 transition-colors hover:bg-slate-50 dark:hover:bg-white/5 ${containerClass}`}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4
+                    className={`text-lg font-medium ${titleClass}`}
                   >
                     {calculation.calculationName}
                   </h4>
-                  {isAutoSaved(calculation) && (
-                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 rounded-full">
-                      <Save className="w-3 h-3 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">
-                        Auto-saved
-                      </span>
+                  {isAuto && (
+                    <div
+                      className={`flex items-center gap-1 rounded-full px-2 py-1 ${badgeClass}`}
+                    >
+                      <Save className="w-3 h-3" />
+                      <span className="text-xs font-medium">Auto-saved</span>
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {isAutoSaved(calculation)
+                    {isAuto
                       ? getAutoSaveTimeAgo(calculation.updatedAt)
                       : formatDate(calculation.createdAt)}
                   </div>
@@ -312,42 +328,44 @@ export default function SavedCalculations({
               <div className="flex items-center gap-2">
                 <div className="text-right">
                   <div
-                    className={`text-2xl font-bold ${
-                      isAutoSaved(calculation)
-                        ? "text-blue-400"
-                        : "text-blue-400"
-                    }`}
+                    className={`text-2xl font-bold ${valueClass}`}
                   >
                     {Number(calculation.cgpa).toFixed(2)}
                   </div>
-                  <div className="text-xs text-gray-400">CGPA</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    CGPA
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-              <div className="bg-gray-700 rounded-lg p-3">
+              <div className="rounded-2xl bg-white/80 p-3 dark:bg-slate-950/60">
                 <div className="flex items-center gap-2 mb-1">
-                  <BookOpen className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-300">Credits</span>
+                  <BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Credits
+                  </span>
                 </div>
-                <div className="text-lg font-semibold text-gray-100">
+                <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                   {Number(calculation.totalCredits)}
                 </div>
               </div>
-              <div className="bg-gray-700 rounded-lg p-3">
+              <div className="rounded-2xl bg-white/80 p-3 dark:bg-slate-950/60">
                 <div className="flex items-center gap-2 mb-1">
-                  <Calculator className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-300">Grade Points</span>
+                  <Calculator className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Grade Points
+                  </span>
                 </div>
-                <div className="text-lg font-semibold text-gray-100">
+                <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                   {Number(calculation.totalGradePoints).toFixed(2)}
                 </div>
               </div>
             </div>
 
             <div className="flex gap-2">
-              {isAutoSaved(calculation) ? (
+              {isAuto ? (
                 // Auto-saved calculation - show restore button
                 <button
                   onClick={() => {
@@ -359,7 +377,8 @@ export default function SavedCalculations({
                       courses: calculation.courses,
                     });
                   }}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-2 font-medium"
+                  className={`flex-1 rounded-full px-4 py-2 transition flex items-center justify-center gap-2 font-medium ${primaryButtonClass}`}
+                  aria-label="Restore auto-saved calculation"
                 >
                   <RotateCcw className="w-4 h-4" />
                   Restore
@@ -403,18 +422,20 @@ export default function SavedCalculations({
                       });
                     }
                   }}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center gap-2 font-medium"
+                  className={`flex-1 rounded-full px-4 py-2 transition flex items-center justify-center gap-2 font-medium ${primaryButtonClass}`}
+                  aria-label="Load saved calculation"
                 >
                   <Download className="w-4 h-4" />
                   Load
                 </button>
               )}
 
-              {!isAutoSaved(calculation) && (
+              {!isAuto && (
                 <button
                   onClick={() => startEditing(calculation)}
-                  className="px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200"
+                  className="rounded-full border border-slate-300 bg-white px-4 py-2 text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-white/20 dark:bg-white/5 dark:text-slate-200 dark:hover:border-white/30 dark:hover:bg-white/10"
                   title="Edit calculation"
+                  aria-label="Edit calculation"
                 >
                   <Edit className="w-4 h-4" />
                 </button>
@@ -422,18 +443,20 @@ export default function SavedCalculations({
 
               <button
                 onClick={() => deleteCalculation(calculation.id)}
-                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200"
+                className="rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-rose-600 transition hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
                 title={
-                  isAutoSaved(calculation)
+                  isAuto
                     ? "Delete auto-saved calculation"
                     : "Delete calculation"
                 }
+                aria-label="Delete calculation"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
 
       {/* Edit Modal */}

@@ -225,31 +225,31 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
   };
 
   return (
-    <Card className="bg-gray-800/50 backdrop-blur-sm shadow-2xl border-gray-700/50">
-      <CardHeader className="space-y-1 pb-6">
-        <CardTitle className="text-3xl font-bold text-center flex items-center justify-center gap-3 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400">
-          <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl">
-            <FaGraduationCap className="text-2xl text-white" />
+    <Card className="bg-white/80 backdrop-blur-sm shadow-[0_24px_70px_-45px_rgba(15,23,42,0.35)] border border-slate-200/80 dark:bg-slate-900/70 dark:border-white/10">
+      <CardHeader className="space-y-2 pb-6">
+        <CardTitle className="text-3xl font-semibold text-center flex items-center justify-center gap-3 text-slate-900 font-display dark:text-slate-100">
+          <div className="p-2 bg-gradient-to-br from-emerald-400 via-emerald-300 to-amber-300 rounded-2xl shadow-sm">
+            <FaGraduationCap className="text-2xl text-slate-900" />
           </div>
-          CGPA Calculator
+          CGPA Studio
         </CardTitle>
-        <p className="text-center text-gray-400 text-sm">
-          Add your courses and calculate your cumulative grade point average
+        <p className="text-center text-slate-500 text-sm dark:text-slate-400">
+          Add courses, include prior semesters, and get an instant CGPA readout.
         </p>
       </CardHeader>
       <CardContent className="space-y-8">
         {/* Previous Data Section */}
-        <div className="bg-gray-700/30 rounded-xl p-6 border border-gray-600/30">
+        <div className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 dark:border-white/10 dark:bg-slate-900/70">
           <div className="flex items-center gap-4 mb-4">
             <Checkbox
               id="usePreviousData"
               checked={usePreviousData}
               onCheckedChange={(checked) => setUsePreviousData(!!checked)}
-              className="bg-gray-600 border-gray-500 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-emerald-500 data-[state=checked]:to-blue-500"
+              className="border-slate-300 bg-white data-[state=checked]:border-emerald-600 data-[state=checked]:bg-emerald-600 dark:border-white/20 dark:bg-slate-950 dark:data-[state=checked]:border-emerald-400 dark:data-[state=checked]:bg-emerald-400"
             />
             <label
               htmlFor="usePreviousData"
-              className="text-gray-200 text-lg font-medium cursor-pointer"
+              className="text-slate-900 text-lg font-medium cursor-pointer dark:text-slate-100"
             >
               Include Previous CGPA and Credits
             </label>
@@ -258,7 +258,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
           {usePreviousData && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   Previous CGPA
                 </label>
                 <input
@@ -271,11 +271,11 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                   onChange={(e) =>
                     setPreviousCgpa(Number(e.target.value) || "")
                   }
-                  className="w-full rounded-xl bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-lg p-4 transition-all duration-200 hover:border-gray-500"
+                  className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   Previous Credits
                 </label>
                 <input
@@ -287,7 +287,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                   onChange={(e) =>
                     setPreviousCredits(Number(e.target.value) || "")
                   }
-                  className="w-full rounded-xl bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-lg p-4 transition-all duration-200 hover:border-gray-500"
+                  className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
                 />
               </div>
             </div>
@@ -297,12 +297,13 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
         {/* Courses Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold text-gray-200">
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
               Course Details
             </h3>
             <button
               onClick={addCourse}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-blue-600 text-white rounded-lg hover:from-emerald-700 hover:to-blue-700 transition-all duration-200 font-medium"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              aria-label="Add course"
             >
               <FaPlus size={14} />
               Add Course
@@ -312,11 +313,11 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
           {courses.map((course, index) => (
             <div
               key={index}
-              className="bg-gray-700/30 rounded-xl p-6 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-200"
+              className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-white/10 dark:bg-slate-950/60"
             >
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 items-end">
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
                     Course Name
                   </label>
                   <input
@@ -326,11 +327,11 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                     onChange={(e) =>
                       handleCourseChange(index, "name", e.target.value)
                     }
-                    className="w-full rounded-xl bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-lg p-4 transition-all duration-200 hover:border-gray-500"
+                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
                     Credits
                   </label>
                   <input
@@ -346,11 +347,11 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                         Number(e.target.value)
                       )
                     }
-                    className="w-full rounded-xl bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-lg p-4 transition-all duration-200 hover:border-gray-500"
+                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
                     Grade
                   </label>
                   <select
@@ -358,7 +359,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                     onChange={(e) =>
                       handleCourseChange(index, "grade", e.target.value)
                     }
-                    className="w-full rounded-xl bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-lg p-4 transition-all duration-200 hover:border-gray-500"
+                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
                   >
                     {Object.keys(gradePoints).map((grade) => (
                       <option key={grade} value={grade}>
@@ -372,26 +373,27 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
                     <AlertDialogTrigger asChild>
                       <button
                         onClick={() => setConfirmationIndex(index)}
-                        className="p-3 rounded-xl bg-red-600/20 text-red-400 hover:bg-red-600/30 hover:text-red-300 transition-all duration-200 border border-red-500/30"
+                        className="rounded-full border border-rose-200 bg-rose-50 p-3 text-rose-600 transition-all duration-200 hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
                         disabled={courses.length === 1}
+                        aria-label="Delete course"
                       >
                         <FaTrash size={16} />
                       </button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-gray-800 border-gray-700">
-                      <AlertDialogTitle className="text-xl font-semibold text-gray-100">
+                    <AlertDialogContent className="bg-white border-slate-200 text-slate-900 dark:bg-slate-900 dark:border-white/10 dark:text-slate-100">
+                      <AlertDialogTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                         Delete Course
                       </AlertDialogTitle>
-                      <p className="text-gray-400 mt-2">
+                      <p className="text-slate-500 mt-2 dark:text-slate-400">
                         Are you sure you want to delete this course? This action
                         cannot be undone.
                       </p>
                       <AlertDialogFooter className="mt-6">
-                        <AlertDialogCancel className="bg-gray-700 text-gray-100 hover:bg-gray-600 border-gray-600 rounded-lg">
+                        <AlertDialogCancel className="rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          className="bg-red-600 text-white hover:bg-red-700 rounded-lg"
+                          className="rounded-full bg-rose-600 text-white hover:bg-rose-700"
                           onClick={() => removeCourse(index)}
                         >
                           Delete
@@ -409,9 +411,9 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
         <div className="flex justify-center pt-8">
           <button
             onClick={calculateCgpa}
-            className="group relative inline-flex items-center justify-center gap-3 px-12 py-4 bg-gradient-to-r from-emerald-600 to-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            className="group relative inline-flex items-center justify-center gap-3 rounded-full bg-slate-900 px-12 py-4 text-lg font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+            aria-label="Calculate CGPA"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-700 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
             <FaCalculator className="w-5 h-5 relative z-10" />
             <span className="relative z-10">Calculate CGPA</span>
           </button>
@@ -420,16 +422,18 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
         {/* Result Display */}
         {cgpa !== null && (
           <div className="mt-8 relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-blue-600 rounded-2xl blur opacity-25"></div>
-            <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 text-center shadow-xl border border-emerald-500/20">
+            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-emerald-200/50 via-sky-200/40 to-amber-200/40 blur-2xl opacity-80"></div>
+            <div className="relative rounded-3xl border border-slate-200/80 bg-white/80 p-8 text-center shadow-xl dark:border-white/10 dark:bg-slate-900/70">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <FaCalculator className="w-8 h-8 text-emerald-400" />
-                <h2 className="text-2xl font-bold text-gray-200">Your CGPA</h2>
+                <FaCalculator className="w-8 h-8 text-emerald-500 dark:text-emerald-300" />
+                <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                  Your CGPA
+                </h2>
               </div>
-              <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400 mb-2">
+              <div className="text-6xl font-semibold text-slate-900 mb-2 font-display dark:text-slate-100">
                 {cgpa.toFixed(2)}
               </div>
-              <p className="text-gray-400 text-lg">
+              <p className="text-slate-500 text-lg dark:text-slate-400">
                 Cumulative Grade Point Average
               </p>
             </div>

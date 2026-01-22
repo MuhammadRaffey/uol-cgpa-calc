@@ -50,47 +50,61 @@ export default function SaveCalculationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+      <div className="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl dark:border-white/10 dark:bg-slate-900">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
           aria-label="Close"
         >
           ×
         </button>
-        <h2 className="text-2xl font-bold text-gray-100 mb-4 text-center">
+        <h2 className="text-2xl font-semibold text-slate-900 mb-4 text-center font-display dark:text-slate-100">
           Save Calculation
         </h2>
         <div className="mb-6">
-          <label className="block text-gray-300 mb-2 font-medium">
+          <label className="block text-slate-500 mb-2 font-medium dark:text-slate-400">
             Calculation Name
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg bg-gray-800 border border-gray-700 text-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
             placeholder="e.g. Spring 2024, 3rd Semester"
             disabled={saving}
           />
         </div>
-        <div className="mb-6 flex flex-col gap-2 text-gray-300 text-sm">
-          <div>
-            <span className="font-semibold">CGPA:</span> {cgpa.toFixed(2)}
+        <div className="mb-6 grid gap-3 text-sm text-slate-500 dark:text-slate-400">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-white/10 dark:bg-slate-950/60">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
+              CGPA:
+            </span>{" "}
+            {cgpa.toFixed(2)}
           </div>
-          <div>
-            <span className="font-semibold">Total Credits:</span> {totalCredits}
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-white/10 dark:bg-slate-950/60">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
+              Total Credits:
+            </span>{" "}
+            {totalCredits}
           </div>
-          <div>
-            <span className="font-semibold">Courses:</span> {courses.length}
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-white/10 dark:bg-slate-950/60">
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
+              Courses:
+            </span>{" "}
+            {courses.length}
           </div>
         </div>
-        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+        {error && (
+          <div className="text-rose-500 mb-4 text-center dark:text-rose-300">
+            {error}
+          </div>
+        )}
         <button
           onClick={handleSave}
-          className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-lg shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 disabled:opacity-60"
+          className="w-full rounded-full bg-slate-900 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-slate-800 disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
           disabled={saving}
+          aria-label="Save calculation"
         >
           {saving ? "Saving..." : "Save"}
         </button>

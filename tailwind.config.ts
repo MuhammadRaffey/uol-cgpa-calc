@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ['var(--font-manrope)', 'ui-sans-serif', 'system-ui'],
+  			display: ['var(--font-fraunces)', 'ui-serif', 'Georgia']
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

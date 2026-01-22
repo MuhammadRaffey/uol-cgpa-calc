@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { X, Save, Edit, Calculator } from "lucide-react";
 
@@ -185,51 +187,53 @@ export default function EditCalculationModal({
   const { cgpa, totalCredits, totalGradePoints } = calculateCgpa();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-700 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl dark:border-white/10 dark:bg-slate-900">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
           aria-label="Close"
         >
           <X className="w-6 h-6" />
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-blue-600 rounded-lg">
-            <Edit className="w-5 h-5 text-white" />
+          <div className="rounded-2xl bg-emerald-100 p-2 dark:bg-emerald-400/10">
+            <Edit className="w-5 h-5 text-emerald-700 dark:text-emerald-200" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-100">Edit Calculation</h2>
+          <h2 className="text-2xl font-semibold text-slate-900 font-display dark:text-slate-100">
+            Edit Calculation
+          </h2>
         </div>
 
         {/* Calculation Name */}
         <div className="mb-6">
-          <label className="block text-gray-300 mb-2 font-medium">
+          <label className="block text-slate-500 mb-2 font-medium dark:text-slate-400">
             Calculation Name
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg bg-gray-800 border border-gray-700 text-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
             placeholder="e.g. Spring 2024, 3rd Semester"
             disabled={saving}
           />
         </div>
 
         {/* Previous Data Section */}
-        <div className="mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-950/60">
           <div className="flex items-center gap-4 mb-4">
             <input
               type="checkbox"
               id="usePreviousData"
               checked={usePreviousData}
               onChange={(e) => setUsePreviousData(e.target.checked)}
-              className="w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 rounded border-slate-300 bg-white focus:ring-emerald-200/70 dark:border-white/20 dark:bg-slate-950 dark:focus:ring-emerald-400/20"
             />
             <label
               htmlFor="usePreviousData"
-              className="text-gray-200 font-medium cursor-pointer"
+              className="text-slate-900 font-medium cursor-pointer dark:text-slate-100"
             >
               Include Previous CGPA and Credits
             </label>
@@ -238,7 +242,7 @@ export default function EditCalculationModal({
           {usePreviousData && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
+                <label className="block text-sm text-slate-500 mb-1 dark:text-slate-400">
                   Previous CGPA
                 </label>
                 <input
@@ -250,12 +254,12 @@ export default function EditCalculationModal({
                   onChange={(e) =>
                     setPreviousCgpa(Number(e.target.value) || "")
                   }
-                  className="w-full rounded-lg bg-gray-700 border border-gray-600 text-gray-100 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
                   placeholder="Enter previous CGPA"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
+                <label className="block text-sm text-slate-500 mb-1 dark:text-slate-400">
                   Previous Credits
                 </label>
                 <input
@@ -266,7 +270,7 @@ export default function EditCalculationModal({
                   onChange={(e) =>
                     setPreviousCredits(Number(e.target.value) || "")
                   }
-                  className="w-full rounded-lg bg-gray-700 border border-gray-600 text-gray-100 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
                   placeholder="Enter earned credits"
                 />
               </div>
@@ -275,17 +279,19 @@ export default function EditCalculationModal({
         </div>
 
         {/* Live CGPA Display */}
-        <div className="mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/60">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Calculator className="w-5 h-5 text-blue-400" />
-              <span className="text-gray-300 font-medium">Live CGPA:</span>
+              <Calculator className="w-5 h-5 text-emerald-600 dark:text-emerald-300" />
+              <span className="text-slate-500 font-medium dark:text-slate-400">
+                Live CGPA:
+              </span>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-blue-400">
+              <div className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                 {cgpa.toFixed(2)}
               </div>
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-slate-500 dark:text-slate-400">
                 {totalCredits} credits • {totalGradePoints.toFixed(2)} points
               </div>
             </div>
@@ -295,10 +301,13 @@ export default function EditCalculationModal({
         {/* Courses */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-200">Courses</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              Courses
+            </h3>
             <button
               onClick={addCourse}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              aria-label="Add course"
             >
               Add Course
             </button>
@@ -308,11 +317,11 @@ export default function EditCalculationModal({
             {courses.map((course, index) => (
               <div
                 key={index}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-700"
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/60"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">
+                    <label className="block text-sm text-slate-500 mb-1 dark:text-slate-400">
                       Course Name
                     </label>
                     <input
@@ -321,12 +330,12 @@ export default function EditCalculationModal({
                       onChange={(e) =>
                         handleCourseChange(index, "name", e.target.value)
                       }
-                      className="w-full rounded-lg bg-gray-700 border border-gray-600 text-gray-100 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
                       placeholder="Course name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">
+                    <label className="block text-sm text-slate-500 mb-1 dark:text-slate-400">
                       Credits
                     </label>
                     <input
@@ -341,12 +350,12 @@ export default function EditCalculationModal({
                           Number(e.target.value)
                         )
                       }
-                      className="w-full rounded-lg bg-gray-700 border border-gray-600 text-gray-100 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
                       placeholder="Credits"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">
+                    <label className="block text-sm text-slate-500 mb-1 dark:text-slate-400">
                       Grade
                     </label>
                     <select
@@ -354,7 +363,7 @@ export default function EditCalculationModal({
                       onChange={(e) =>
                         handleCourseChange(index, "grade", e.target.value)
                       }
-                      className="w-full rounded-lg bg-gray-700 border border-gray-600 text-gray-100 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:ring-emerald-400/20"
                     >
                       {Object.keys(gradePoints).map((grade) => (
                         <option key={grade} value={grade}>
@@ -366,8 +375,9 @@ export default function EditCalculationModal({
                   <div className="flex justify-end">
                     <button
                       onClick={() => removeCourse(index)}
-                      className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                      className="rounded-full border border-rose-200 bg-rose-50 p-2 text-rose-600 transition hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
                       disabled={courses.length === 1}
+                      aria-label="Remove course"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -378,21 +388,27 @@ export default function EditCalculationModal({
           </div>
         </div>
 
-        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+        {error && (
+          <div className="text-rose-500 mb-4 text-center dark:text-rose-300">
+            {error}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors"
+            className="flex-1 rounded-full border border-slate-300 bg-white px-4 py-3 text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-white/20 dark:bg-white/5 dark:text-slate-200 dark:hover:border-white/30 dark:hover:bg-white/10"
             disabled={saving}
+            aria-label="Cancel editing"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            className="flex-1 rounded-full bg-slate-900 px-4 py-3 text-white transition hover:bg-slate-800 flex items-center justify-center gap-2 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             disabled={saving}
+            aria-label="Save changes"
           >
             <Save className="w-4 h-4" />
             {saving ? "Saving..." : "Save Changes"}
