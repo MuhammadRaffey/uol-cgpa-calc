@@ -205,9 +205,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     "No email on record";
 
   return (
-    <>
+    <div className="relative min-h-screen overflow-hidden bg-[#f7f3ec] text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      {/* Background Orbs */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-emerald-200/40 blur-[140px] dark:bg-emerald-500/15"></div>
+        <div className="absolute top-40 -left-20 h-80 w-80 rounded-full bg-amber-200/35 blur-[120px] dark:bg-amber-500/10"></div>
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-sky-200/30 blur-[140px] dark:bg-sky-500/10"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(15,23,42,0.06),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.12),transparent_45%)] dark:bg-[radial-gradient(circle_at_20%_20%,rgba(148,163,184,0.12),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.08),transparent_45%)]"></div>
+      </div>
+
       <AdminNavbar />
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100/50 to-slate-50 px-4 pt-24 pb-12 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      <div className="relative z-10 min-h-screen px-4 pt-24 pb-12">
       <div className="mx-auto w-full max-w-7xl space-y-8">
         <div className="group relative">
           <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-[2.5rem] opacity-10 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
@@ -422,11 +430,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 </div>
               </AnimatedUserDetail>
             )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
-    </>
+    </div>
   );
 }

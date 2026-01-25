@@ -5,8 +5,11 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+const connectionString = new URL(process.env.DATABASE_URL!);
+connectionString.searchParams.set("sslmode", "verify-full");
+
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: connectionString.toString(),
 });
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
