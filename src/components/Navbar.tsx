@@ -179,7 +179,7 @@ export default function Navbar({ onScrollTo, onScrollKeyDown }: NavbarProps) {
                     transition={{ duration: 4, repeat: Infinity }}
                   >
                     <Image
-                      src="/Logo.png"
+                      src="/Logobg.png"
                       alt="Logo"
                       fill
                       className="object-contain"
