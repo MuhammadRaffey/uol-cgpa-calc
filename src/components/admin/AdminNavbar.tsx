@@ -39,18 +39,18 @@ export default function AdminNavbar() {
                 transition={{ duration: 0.2 }}
               >
                 <Image
-                  src="/Logo.png"
-                  alt="Lahore GPA Calculator Logo"
+                  src="/Logobg.png"
+                  alt="UOL GPA Calculator Logo"
                   fill
                   className="object-contain"
                   priority
                 />
               </motion.div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-black gradient-text font-display">
-                  Lahore GPA Calculator
+              <div>
+                <h1 className="text-sm font-black gradient-text font-display sm:text-lg leading-tight">
+                  UOL GPA Calculator
                 </h1>
-                <p className="text-xs text-slate-500 font-semibold dark:text-slate-400">
+                <p className="hidden text-xs text-slate-500 font-semibold dark:text-slate-400 sm:block">
                   Admin Console
                 </p>
               </div>

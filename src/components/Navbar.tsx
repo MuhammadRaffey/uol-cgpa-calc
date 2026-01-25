@@ -90,11 +90,11 @@ export default function Navbar({ onScrollTo, onScrollKeyDown }: NavbarProps) {
                   priority
                 />
               </motion.div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-black gradient-text font-display">
+              <div>
+                <h1 className="text-sm font-black gradient-text font-display sm:text-lg leading-tight">
                   UOL GPA Calculator
                 </h1>
-                <p className="text-xs text-slate-500 font-semibold dark:text-slate-400">
+                <p className="hidden text-xs text-slate-500 font-semibold dark:text-slate-400 sm:block">
                   SGPA & CGPA Made Easy
                 </p>
               </div>
