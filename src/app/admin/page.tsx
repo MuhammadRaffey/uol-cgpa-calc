@@ -1,9 +1,19 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
+import Link from "next/link";
 import AdminUserList, {
   type AdminUserListItem,
 } from "@/components/admin/user-list";
+import {
+  AnimatedHeader,
+  AnimatedBadge,
+  AnimatedStatCard,
+  AnimatedPanel,
+  AnimatedUserDetail,
+  AnimatedListItem,
+} from "@/components/admin/animated-elements";
+import AdminNavbar from "@/components/admin/AdminNavbar";
 
 const toDateString = (value: Date | string | number | null) => {
   if (!value) return "—";
@@ -195,62 +205,88 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     "No email on record";
 
   return (
-    <div className="min-h-screen bg-[#f7f3ec] px-4 py-12 dark:bg-slate-950">
-      <div className="mx-auto w-full max-w-6xl space-y-8">
-        <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-8 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-            Admin Console
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold text-slate-900 font-display dark:text-slate-100">
-            User activity overview
-          </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-300">
-            Track Clerk signups and review every saved CGPA calculation.
-          </p>
+    <>
+      <AdminNavbar />
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100/50 to-slate-50 px-4 pt-24 pb-12 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      <div className="mx-auto w-full max-w-7xl space-y-8">
+        <div className="group relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-[2.5rem] opacity-10 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+          <div className="relative rounded-[2.5rem] border-2 border-slate-200/80 glass-strong p-10 shadow-custom-2xl dark:border-white/10">
+            <AnimatedBadge className="inline-flex items-center gap-2 rounded-full border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-purple-700 shadow-sm dark:border-purple-400/30 dark:from-purple-400/10 dark:to-pink-400/10 dark:text-purple-200">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Admin Console
+            </AnimatedBadge>
+            <h1 className="mt-5 text-4xl font-black text-slate-900 font-display dark:text-slate-100">
+              User activity
+              <span className="gradient-text"> overview</span>
+            </h1>
+            <p className="mt-3 text-lg text-slate-600 dark:text-slate-300">
+              Track Clerk signups and review every saved CGPA calculation.
+            </p>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
           {[
-            { label: "Total users", value: totalUsers },
-            { label: "Active users", value: activeUsers },
-            { label: "Saved calculations", value: totalCalculations },
-          ].map((stat) => (
-            <div
+            { label: "Total users", value: totalUsers, gradient: "from-blue-400 to-cyan-400" },
+            { label: "Active users", value: activeUsers, gradient: "from-emerald-400 to-teal-400" },
+            { label: "Saved calculations", value: totalCalculations, gradient: "from-purple-400 to-pink-400" },
+          ].map((stat, index) => (
+            <AnimatedStatCard
               key={stat.label}
-              className="rounded-[28px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_18px_50px_-40px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70"
-            >
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-                {stat.label}
-              </p>
-              <p className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100">
-                {stat.value}
-              </p>
-            </div>
+              label={stat.label}
+              value={stat.value}
+              gradient={stat.gradient}
+              index={index}
+            />
           ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
-          <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
-            <AdminUserList users={mergedUsers} selectedUserId={selectedUserId} />
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_2fr]">
+          {/* User List - Hidden on mobile when user is selected */}
+          <div className={`group relative ${selectedUserId ? 'hidden lg:block' : ''}`}>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-[2rem] opacity-0 group-hover:opacity-10 blur transition-opacity duration-500"></div>
+            <div className="relative rounded-[2rem] border-2 border-slate-200/80 glass p-8 shadow-custom-lg dark:border-white/10">
+              <AdminUserList users={mergedUsers} selectedUserId={selectedUserId} />
+            </div>
           </div>
 
-          <div className="rounded-[32px] border border-slate-200/80 bg-white/80 p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.35)] dark:border-white/10 dark:bg-slate-900/70">
-            {!selectedUserId && (
-              <div className="text-center text-slate-500 dark:text-slate-400 py-20">
-                Select a user to view their saved CGPA activity.
-              </div>
-            )}
+          {/* User Detail Panel - Full width on mobile when user is selected */}
+          <div className={`group relative ${selectedUserId ? 'lg:col-start-2' : ''}`}>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-[2rem] opacity-0 group-hover:opacity-10 blur transition-opacity duration-500"></div>
+            <div className="relative rounded-[2rem] border-2 border-slate-200/80 glass p-8 shadow-custom-lg dark:border-white/10">
+              {!selectedUserId && (
+                <div className="text-center text-slate-500 dark:text-slate-400 py-20">
+                  <svg className="mx-auto h-16 w-16 text-slate-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <p className="text-lg font-semibold">Select a user to view their saved CGPA activity.</p>
+                </div>
+              )}
 
-            {selectedUserId && (
-              <div className="space-y-6">
-                <div>
+              {selectedUserId && (
+              <AnimatedUserDetail className="space-y-6">
+                {/* Back to Users button - visible only on mobile */}
+                <Link 
+                  href="/admin" 
+                  className="lg:hidden inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Back to Users
+                </Link>
+                
+                <div className="min-w-0">
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
                     User detail
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                  <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100 break-all">
                     {selectedDisplayName ?? selectedEmail}
                   </h2>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 break-words">
                     {selectedEmail}
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -282,14 +318,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     </div>
                   )}
 
-                  {selectedCalculations.map((calculation) => {
+                  {selectedCalculations.map((calculation, calcIndex) => {
                     const courses = parseCourses(calculation.courses);
                     const isAuto =
                       calculation.calculationName === "Auto-saved";
 
                     return (
-                      <div
+                      <AnimatedListItem
                         key={calculation.id}
+                        index={calcIndex}
                         className="rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-slate-950/60"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -379,15 +416,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                             ))}
                           </div>
                         </div>
-                      </div>
+                      </AnimatedListItem>
                     );
                   })}
                 </div>
-              </div>
+              </AnimatedUserDetail>
             )}
           </div>
         </div>
+        </div>
       </div>
     </div>
+    </>
   );
 }

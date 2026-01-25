@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { FaPlus, FaTrash, FaGraduationCap, FaCalculator } from "react-icons/fa";
+import { FaPlus, FaTrash, FaGraduationCap, FaCalculator, FaChartLine } from "react-icons/fa";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -58,6 +58,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
   const [previousCgpa, setPreviousCgpa] = useState<number | "">("");
   const [previousCredits, setPreviousCredits] = useState<number | "">("");
   const [usePreviousData, setUsePreviousData] = useState<boolean>(false);
+  const [showResult, setShowResult] = useState(false);
 
   // Debounce timer ref
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -128,6 +129,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
 
     const calculatedCgpa = totalPoints / totalCredits;
     setCgpa(calculatedCgpa);
+    setShowResult(true);
 
     // Create a hash of the current calculation state
     const currentState = JSON.stringify({
@@ -182,6 +184,7 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
     } else {
       // Reset CGPA if no valid data
       setCgpa(null);
+      setShowResult(false);
       if (onCalculationUpdateRef.current) {
         onCalculationUpdateRef.current({
           cgpa: 0,
@@ -225,217 +228,260 @@ const CgpaCalculatorComponent: React.FC<CgpaCalculatorComponentProps> = ({
   };
 
   return (
-    <Card className="bg-white/80 backdrop-blur-sm shadow-[0_24px_70px_-45px_rgba(15,23,42,0.35)] border border-slate-200/80 dark:bg-slate-900/70 dark:border-white/10">
-      <CardHeader className="space-y-2 pb-6">
-        <CardTitle className="text-3xl font-semibold text-center flex items-center justify-center gap-3 text-slate-900 font-display dark:text-slate-100">
-          <div className="p-2 bg-gradient-to-br from-emerald-400 via-emerald-300 to-amber-300 rounded-2xl shadow-sm">
-            <FaGraduationCap className="text-2xl text-slate-900" />
+    <Card className="relative overflow-hidden glass-strong shadow-custom-2xl border-2 border-white/30 dark:border-white/10">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 opacity-5 dark:opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }}></div>
+      </div>
+
+      <CardHeader className="relative space-y-3 pb-8">
+        <div className="flex items-center justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-3xl blur-xl opacity-50 animate-pulse-glow"></div>
+            <div className="relative p-4 bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 rounded-3xl shadow-lg">
+              <FaGraduationCap className="text-3xl text-white" />
+            </div>
           </div>
+        </div>
+        <CardTitle className="text-4xl font-bold text-center gradient-text font-display">
           CGPA Studio
         </CardTitle>
-        <p className="text-center text-slate-500 text-sm dark:text-slate-400">
-          Add courses, include prior semesters, and get an instant CGPA readout.
+        <p className="text-center text-slate-600 text-base max-w-2xl mx-auto dark:text-slate-400">
+          Add courses, include prior semesters, and get an instant CGPA readout with our premium calculator.
         </p>
       </CardHeader>
-      <CardContent className="space-y-8">
+
+      <CardContent className="relative space-y-10">
         {/* Previous Data Section */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 dark:border-white/10 dark:bg-slate-900/70">
-          <div className="flex items-center gap-4 mb-4">
-            <Checkbox
-              id="usePreviousData"
-              checked={usePreviousData}
-              onCheckedChange={(checked) => setUsePreviousData(!!checked)}
-              className="border-slate-300 bg-white data-[state=checked]:border-emerald-600 data-[state=checked]:bg-emerald-600 dark:border-white/20 dark:bg-slate-950 dark:data-[state=checked]:border-emerald-400 dark:data-[state=checked]:bg-emerald-400"
-            />
-            <label
-              htmlFor="usePreviousData"
-              className="text-slate-900 text-lg font-medium cursor-pointer dark:text-slate-100"
-            >
-              Include Previous CGPA and Credits
-            </label>
-          </div>
-
-          {usePreviousData && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Previous CGPA
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="4"
-                  placeholder="Enter previous CGPA"
-                  value={previousCgpa === "" ? "" : previousCgpa}
-                  onChange={(e) =>
-                    setPreviousCgpa(Number(e.target.value) || "")
-                  }
-                  className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Previous Credits
-                </label>
-                <input
-                  type="number"
-                  step="0.5"
-                  min="0"
-                  placeholder="Enter earned credits"
-                  value={previousCredits === "" ? "" : previousCredits}
-                  onChange={(e) =>
-                    setPreviousCredits(Number(e.target.value) || "")
-                  }
-                  className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
-                />
-              </div>
+        <div className="group relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-3xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-500"></div>
+          <div className="relative rounded-3xl border-2 border-slate-200/80 glass p-8 transition-all duration-300 dark:border-white/10">
+            <div className="flex items-center gap-4 mb-6">
+              <Checkbox
+                id="usePreviousData"
+                checked={usePreviousData}
+                onCheckedChange={(checked) => setUsePreviousData(!!checked)}
+                className="h-6 w-6 border-2 border-slate-300 bg-white data-[state=checked]:border-emerald-500 data-[state=checked]:bg-emerald-500 transition-all duration-200 dark:border-white/20 dark:bg-slate-950 dark:data-[state=checked]:border-emerald-400 dark:data-[state=checked]:bg-emerald-400"
+              />
+              <label
+                htmlFor="usePreviousData"
+                className="text-slate-900 text-xl font-semibold cursor-pointer font-display dark:text-slate-100"
+              >
+                Include Previous CGPA and Credits
+              </label>
             </div>
-          )}
-        </div>
 
-        {/* Courses Section */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-              Course Details
-            </h3>
-            <button
-              onClick={addCourse}
-              className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-              aria-label="Add course"
-            >
-              <FaPlus size={14} />
-              Add Course
-            </button>
-          </div>
-
-          {courses.map((course, index) => (
-            <div
-              key={index}
-              className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-white/10 dark:bg-slate-950/60"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 items-end">
+            {usePreviousData && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-slide-up">
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Course Name
+                  <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-400">
+                    Previous CGPA
                   </label>
                   <input
-                    type="text"
-                    placeholder="Enter course name"
-                    value={course.name}
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="4"
+                    placeholder="Enter previous CGPA"
+                    value={previousCgpa === "" ? "" : previousCgpa}
                     onChange={(e) =>
-                      handleCourseChange(index, "name", e.target.value)
+                      setPreviousCgpa(Number(e.target.value) || "")
                     }
-                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
+                    className="input-enhanced text-lg font-medium"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Credits
+                  <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-400">
+                    Previous Credits
                   </label>
                   <input
                     type="number"
                     step="0.5"
                     min="0"
-                    placeholder="Credit hours"
-                    value={course.credits === 0 ? "" : course.credits}
+                    placeholder="Enter earned credits"
+                    value={previousCredits === "" ? "" : previousCredits}
                     onChange={(e) =>
-                      handleCourseChange(
-                        index,
-                        "credits",
-                        Number(e.target.value)
-                      )
+                      setPreviousCredits(Number(e.target.value) || "")
                     }
-                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
+                    className="input-enhanced text-lg font-medium"
                   />
                 </div>
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Grade
-                  </label>
-                  <select
-                    value={course.grade}
-                    onChange={(e) =>
-                      handleCourseChange(index, "grade", e.target.value)
-                    }
-                    className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/70 text-lg p-4 transition-all duration-200 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20"
-                  >
-                    {Object.keys(gradePoints).map((grade) => (
-                      <option key={grade} value={grade}>
-                        {grade}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-center gap-3 justify-center sm:justify-end">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button
-                        onClick={() => setConfirmationIndex(index)}
-                        className="rounded-full border border-rose-200 bg-rose-50 p-3 text-rose-600 transition-all duration-200 hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
-                        disabled={courses.length === 1}
-                        aria-label="Delete course"
-                      >
-                        <FaTrash size={16} />
-                      </button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-white border-slate-200 text-slate-900 dark:bg-slate-900 dark:border-white/10 dark:text-slate-100">
-                      <AlertDialogTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                        Delete Course
-                      </AlertDialogTitle>
-                      <p className="text-slate-500 mt-2 dark:text-slate-400">
-                        Are you sure you want to delete this course? This action
-                        cannot be undone.
-                      </p>
-                      <AlertDialogFooter className="mt-6">
-                        <AlertDialogCancel className="rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10">
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          className="rounded-full bg-rose-600 text-white hover:bg-rose-700"
-                          onClick={() => removeCourse(index)}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Courses Section */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl">
+                <FaChartLine className="text-xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 font-display dark:text-slate-100">
+                Course Details
+              </h3>
+            </div>
+            <button
+              onClick={addCourse}
+              className="btn-gradient group"
+              aria-label="Add course"
+            >
+              <FaPlus size={14} className="group-hover:rotate-90 transition-transform duration-300" />
+              Add Course
+            </button>
+          </div>
+
+          <div className="space-y-5">
+            {courses.map((course, index) => (
+              <div
+                key={index}
+                className="group relative card-hover"
+              >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-3xl opacity-0 group-hover:opacity-30 blur transition-opacity duration-500"></div>
+                <div className="relative rounded-3xl border-2 border-slate-200/80 glass p-6 shadow-custom-md dark:border-white/10">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 items-end">
+                    <div className="space-y-3 sm:col-span-2">
+                      <label className="text-xs font-bold text-slate-600 uppercase tracking-wider dark:text-slate-400">
+                        Course Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Data Structures"
+                        value={course.name}
+                        onChange={(e) =>
+                          handleCourseChange(index, "name", e.target.value)
+                        }
+                        className="input-enhanced font-medium"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-xs font-bold text-slate-600 uppercase tracking-wider dark:text-slate-400">
+                        Credits
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        placeholder="3.0"
+                        value={course.credits === 0 ? "" : course.credits}
+                        onChange={(e) =>
+                          handleCourseChange(
+                            index,
+                            "credits",
+                            Number(e.target.value)
+                          )
+                        }
+                        className="input-enhanced font-medium"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-xs font-bold text-slate-600 uppercase tracking-wider dark:text-slate-400">
+                        Grade
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <select
+                          value={course.grade}
+                          onChange={(e) =>
+                            handleCourseChange(index, "grade", e.target.value)
+                          }
+                          className="flex-1 input-enhanced font-semibold"
                         >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          {Object.keys(gradePoints).map((grade) => (
+                            <option key={grade} value={grade}>
+                              {grade}
+                            </option>
+                          ))}
+                        </select>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              onClick={() => setConfirmationIndex(index)}
+                              className="group/delete rounded-2xl border-2 border-rose-200 bg-rose-50 p-3 text-rose-600 transition-all duration-200 hover:border-rose-300 hover:bg-rose-100 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/20"
+                              disabled={courses.length === 1}
+                              aria-label="Delete course"
+                            >
+                              <FaTrash size={16} className="group-hover/delete:scale-110 transition-transform" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="glass-strong border-2 border-white/30 text-slate-900 dark:border-white/10 dark:text-slate-100 rounded-3xl">
+                            <AlertDialogTitle className="text-2xl font-bold text-slate-900 font-display dark:text-slate-100">
+                              Delete Course
+                            </AlertDialogTitle>
+                            <p className="text-slate-600 mt-3 text-base dark:text-slate-400">
+                              Are you sure you want to delete this course? This action
+                              cannot be undone.
+                            </p>
+                            <AlertDialogFooter className="mt-8 gap-3">
+                              <AlertDialogCancel className="btn-secondary">
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                className="rounded-full bg-rose-600 text-white hover:bg-rose-700 px-6 py-3 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                                onClick={() => removeCourse(index)}
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Calculate Button */}
-        <div className="flex justify-center pt-8">
+        <div className="flex justify-center pt-6">
           <button
             onClick={calculateCgpa}
-            className="group relative inline-flex items-center justify-center gap-3 rounded-full bg-slate-900 px-12 py-4 text-lg font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-12 py-5 text-lg font-bold text-white shadow-custom-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-custom-2xl active:translate-y-0"
             aria-label="Calculate CGPA"
           >
-            <FaCalculator className="w-5 h-5 relative z-10" />
-            <span className="relative z-10">Calculate CGPA</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex items-center justify-center gap-3">
+              <FaCalculator className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+              <span>Calculate CGPA</span>
+            </div>
           </button>
         </div>
 
         {/* Result Display */}
-        {cgpa !== null && (
-          <div className="mt-8 relative">
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-emerald-200/50 via-sky-200/40 to-amber-200/40 blur-2xl opacity-80"></div>
-            <div className="relative rounded-3xl border border-slate-200/80 bg-white/80 p-8 text-center shadow-xl dark:border-white/10 dark:bg-slate-900/70">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <FaCalculator className="w-8 h-8 text-emerald-500 dark:text-emerald-300" />
-                <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+        {cgpa !== null && showResult && (
+          <div className="relative animate-scale-in">
+            {/* Glow effect */}
+            <div className="absolute -inset-2 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-[2.5rem] blur-2xl opacity-30 animate-pulse-glow"></div>
+            
+            {/* Result card */}
+            <div className="relative rounded-[2.5rem] border-2 border-white/40 glass-strong p-10 text-center shadow-custom-2xl dark:border-white/20">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="p-3 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-2xl shadow-lg">
+                  <FaCalculator className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold gradient-text font-display">
                   Your CGPA
                 </h2>
               </div>
-              <div className="text-6xl font-semibold text-slate-900 mb-2 font-display dark:text-slate-100">
-                {cgpa.toFixed(2)}
+              <div className="relative inline-block">
+                <div className="text-7xl font-black text-slate-900 mb-3 font-display dark:text-slate-100">
+                  {cgpa.toFixed(2)}
+                </div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-full blur-xl opacity-20"></div>
               </div>
-              <p className="text-slate-500 text-lg dark:text-slate-400">
+              <p className="text-slate-600 text-lg font-medium dark:text-slate-400">
                 Cumulative Grade Point Average
               </p>
+              
+              {/* Performance indicator */}
+              <div className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30">
+                <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                  {cgpa >= 3.5 ? "🎉 Excellent Performance!" : cgpa >= 3.0 ? "✨ Great Work!" : cgpa >= 2.5 ? "👍 Good Progress!" : "💪 Keep Going!"}
+                </span>
+              </div>
             </div>
           </div>
         )}

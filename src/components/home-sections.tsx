@@ -4,6 +4,7 @@ import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Calculator } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SaveCalculationModal from "@/components/SaveCalculationModal";
 import HeroSection from "@/components/home/hero-section";
@@ -374,7 +375,12 @@ const HomeSections = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(15,23,42,0.06),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.12),transparent_45%)] dark:bg-[radial-gradient(circle_at_20%_20%,rgba(148,163,184,0.12),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.08),transparent_45%)]"></div>
       </div>
 
-      <div className="relative">
+      <Navbar
+        onScrollTo={handleScrollTo}
+        onScrollKeyDown={handleScrollKeyDown}
+      />
+
+      <div className="relative pt-20">
         <HeroSection
           stats={sessionStats}
           onScrollTo={handleScrollTo}
