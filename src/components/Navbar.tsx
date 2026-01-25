@@ -127,8 +127,26 @@ export default function Navbar({ onScrollTo, onScrollKeyDown }: NavbarProps) {
               
               <UserButton
                 appearance={{
+                  variables: {
+                    colorBackground: "hsl(var(--card))",
+                    colorText: "hsl(var(--foreground))",
+                    colorTextSecondary: "hsl(var(--muted-foreground))",
+                    colorPrimary: "hsl(var(--primary))",
+                    colorDanger: "hsl(var(--destructive))",
+                    borderRadius: "var(--radius)",
+                  },
                   elements: {
                     avatarBox: "h-10 w-10 rounded-full border-2 border-emerald-400 shadow-lg",
+                    userButtonPopoverCard:
+                      "bg-card text-foreground border border-border/60 shadow-xl backdrop-blur-xl",
+                    userButtonPopoverMain: "text-foreground",
+                    userButtonPopoverFooter: "bg-transparent text-muted-foreground",
+                    userButtonPopoverActionButton:
+                      "text-foreground hover:bg-secondary/70",
+                    userButtonPopoverActionButtonText: "text-foreground",
+                    userButtonPopoverActionButtonIcon: "text-muted-foreground",
+                    userButtonPopoverFooterAction: "text-primary",
+                    userButtonPopoverFooterActionText: "text-primary",
                   },
                 }}
               />

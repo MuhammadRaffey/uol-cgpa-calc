@@ -31,36 +31,39 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: undefined,
         variables: {
-          colorBackground: 'hsl(222 47% 8%)',
-          colorInputBackground: 'hsl(222 47% 10%)',
-          colorInputText: 'hsl(210 40% 96%)',
-          colorText: 'hsl(210 40% 96%)',
-          colorTextSecondary: 'hsl(215 16% 65%)',
-          colorPrimary: 'hsl(167 80% 42%)',
-          colorDanger: 'hsl(0 72% 52%)',
-          borderRadius: '0.75rem',
+          colorBackground: "hsl(var(--background))",
+          colorInputBackground: "hsl(var(--background))",
+          colorInputText: "hsl(var(--foreground))",
+          colorText: "hsl(var(--foreground))",
+          colorTextSecondary: "hsl(var(--muted-foreground))",
+          colorPrimary: "hsl(var(--primary))",
+          colorDanger: "hsl(var(--destructive))",
+          borderRadius: "var(--radius)",
         },
         elements: {
-          rootBox: 'dark:bg-slate-950',
-          card: 'dark:bg-slate-900/90 dark:border-white/10 backdrop-blur-xl',
-          headerTitle: 'dark:text-slate-100',
-          headerSubtitle: 'dark:text-slate-400',
-          socialButtonsBlockButton: 'dark:bg-white/5 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/10',
-          formButtonPrimary: 'bg-emerald-600 hover:bg-emerald-700',
-          footerActionLink: 'dark:text-emerald-400 hover:dark:text-emerald-300',
-          formFieldInput: 'dark:bg-slate-950/60 dark:border-white/10 dark:text-slate-100',
-          formFieldLabel: 'dark:text-slate-300',
-          dividerLine: 'dark:bg-white/10',
-          dividerText: 'dark:text-slate-400',
-          footer: 'dark:bg-slate-900/90 dark:border-white/10',
-          footerAction: 'dark:bg-slate-900/90',
-          footerActionText: 'dark:text-slate-400',
-          identityPreviewText: 'dark:text-slate-200',
-          identityPreviewEditButton: 'dark:text-emerald-400',
-          formResendCodeLink: 'dark:text-emerald-400',
-          otpCodeFieldInput: 'dark:bg-slate-950/60 dark:border-white/10 dark:text-slate-100',
+          rootBox: "bg-transparent",
+          card: "bg-card/80 border border-border/60 shadow-lg backdrop-blur-xl",
+          headerTitle: "text-foreground",
+          headerSubtitle: "text-muted-foreground",
+          socialButtonsBlockButton:
+            "bg-secondary/60 border border-border text-foreground hover:bg-secondary/80",
+          formButtonPrimary:
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+          footerActionLink: "text-primary hover:text-primary/80",
+          formFieldInput:
+            "bg-background/60 border border-border text-foreground focus-visible:ring-2 focus-visible:ring-primary/30",
+          formFieldLabel: "text-foreground",
+          dividerLine: "bg-border/70",
+          dividerText: "text-muted-foreground",
+          footer: "bg-transparent",
+          footerAction: "bg-transparent",
+          footerActionText: "text-muted-foreground",
+          identityPreviewText: "text-foreground",
+          identityPreviewEditButton: "text-primary",
+          formResendCodeLink: "text-primary",
+          otpCodeFieldInput:
+            "bg-background/60 border border-border text-foreground",
         },
       }}
     >
@@ -70,7 +73,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <body
-          className="min-h-screen bg-[#f7f3ec] text-slate-900 antialiased font-sans dark:bg-slate-950 dark:text-slate-100"
+          className="min-h-screen bg-background text-foreground antialiased font-sans"
           suppressHydrationWarning={true}
         >
           <ThemeProvider
